@@ -1,3 +1,5 @@
+import { API_ROUTES } from "@/src/lib/api/routes";
+
 export interface SimpleVisitDTO {
   id: number;
   visitedAt: string;
@@ -21,7 +23,7 @@ export interface RestaurantWithVisitsDTO extends SimpleRestaurantDTO {
 export type RestaurantListItemDTO = RestaurantWithVisitsDTO | SimpleRestaurantDTO;
 
 export async function getAllRestaurants(): Promise<RestaurantListItemDTO[]> {
-  const response = await fetch("/api/restaurants/GetAllRestaurants", {
+  const response = await fetch(API_ROUTES.restaurants.localGetAll, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     cache: "no-store",

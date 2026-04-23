@@ -11,8 +11,7 @@ interface FormStatus {
 
 export function LoginForm() {
   const router = useRouter();
-  const { data: session, isPending: sessionPending, error: sessionError } =
-    authClient.useSession();
+  const { error: sessionError } = authClient.useSession();
 
   const [status, setStatus] = useState<FormStatus>({ status: "idle" });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,31 +65,6 @@ export function LoginForm() {
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      setIsSubmitting(true);
-      const result = await authClient.signOut();
-
-      if (result?.error) {
-        setStatus({
-          status: "error",
-          message: result.error.message ?? "No pudimos cerrar la sesión.",
-        });
-        return;
-      }
-
-      setStatus({ status: "success", message: "Cerraste sesión correctamente." });
-    } catch (error) {
-      console.error("Error al cerrar sesión", error);
-      setStatus({
-        status: "error",
-        message: "No pudimos cerrar la sesión. Intentá nuevamente.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <section className="w-full max-w-md space-y-6 rounded-3xl border border-zinc-200 bg-white/80 p-8 shadow-lg backdrop-blur">
       <header className="space-y-2">
@@ -102,23 +76,6 @@ export function LoginForm() {
           Accedé al panel con tu usuario registrado en Better Auth.
         </p>
       </header>
-
-      {session && !sessionPending && (
-        <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
-          <p className="font-medium">Sesión activa</p>
-          <p className="text-emerald-800">
-            Estás logueado como <span className="font-semibold">{session.user.email}</span>.
-          </p>
-          <button
-            type="button"
-            onClick={handleSignOut}
-            disabled={isSubmitting}
-            className="mt-3 inline-flex items-center justify-center rounded-full border border-emerald-200 px-4 py-2 text-sm font-medium text-emerald-900 transition hover:border-emerald-300 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isSubmitting ? "Cerrando..." : "Cerrar sesión"}
-          </button>
-        </div>
-      )}
 
       {sessionError && (
         <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">

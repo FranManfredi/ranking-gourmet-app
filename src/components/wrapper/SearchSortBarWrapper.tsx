@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import SearchSortBar from "@/src/components/search/SearchSortBar";
 import RestaurantRankingCard from "@/src/components/card/RestaurantRankingCard";
-import { getAllRestaurants, RestaurantListItemDTO } from "@/src/lib/restaurants/api";
+import { getAllRestaurants, RestaurantListItemDTO } from "@/src/lib/restaurants/client";
 
 export default function SearchSortBarWrapper() {
     const [restaurants, setRestaurants] = useState<RestaurantListItemDTO[]>([]);

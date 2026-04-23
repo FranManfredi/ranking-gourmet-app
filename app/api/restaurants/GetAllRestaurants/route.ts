@@ -1,30 +1,17 @@
 import { NextRequest } from "next/server";
-
-const DEFAULT_BACKEND_API_URL = "http://localhost:3000";
-
-function getBackendApiUrl() {
-  return process.env.BACKEND_API_URL?.replace(/\/$/, "") ?? DEFAULT_BACKEND_API_URL;
-}
+import { API_ROUTES } from "@/src/lib/api/routes";
+import { getBackendApiBaseUrl } from "@/src/lib/config/server";
+import { proxyToUpstream } from "@/src/lib/server/proxy";
 
 export async function GET(request: NextRequest) {
-  const targetUrl = `${getBackendApiUrl()}/api/restaurants/GetAllRestaurants${request.nextUrl.search}`;
-
-  const upstreamResponse = await fetch(targetUrl, {
-    method: "GET",
-    headers: request.headers,
-    cache: "no-store",
-  });
-
-  const responseHeaders = new Headers();
-  upstreamResponse.headers.forEach((value, key) => {
-    if (key.toLowerCase() !== "content-encoding") {
-      responseHeaders.append(key, value);
-    }
-  });
-
-  return new Response(upstreamResponse.body, {
-    status: upstreamResponse.status,
-    statusText: upstreamResponse.statusText,
-    headers: responseHeaders,
-  });
+  try {
+    const targetUrl = `${getBackendApiBaseUrl()}${API_ROUTES.restaurants.backendGetAll}${request.nextUrl.search}`;
+    return proxyToUpstream(request, targetUrl);
+  } catch (error) {
+    console.error("Restaurants gateway error", error);
+    return Response.json(
+      { message: "Failed to load restaurants from backend gateway" },
+      { status: 500 }
+    );
+  }
 }
