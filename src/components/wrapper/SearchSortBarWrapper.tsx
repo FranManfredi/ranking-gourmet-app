@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import SearchSortBar from "@/src/components/search/SearchSortBar";
 import RestaurantRankingCard from "@/src/components/card/RestaurantRankingCard";
 import { getAllRestaurants, RestaurantListItemDTO } from "@/src/lib/restaurants/client";
+import { useRouter } from "next/navigation";
 
 export default function SearchSortBarWrapper() {
     const [restaurants, setRestaurants] = useState<RestaurantListItemDTO[]>([]);
@@ -11,6 +12,7 @@ export default function SearchSortBarWrapper() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [sortAsc, setSortAsc] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         const loadRestaurants = async () => {
@@ -86,12 +88,13 @@ export default function SearchSortBarWrapper() {
                     !error &&
                     filteredRestaurants.map((restaurant, index) => (
                         <RestaurantRankingCard
+                            onClick={() => router.push(`/restaurants/${restaurant.id}`)}
                             key={restaurant.id}
                             position={index + 1}
                             name={restaurant.name}
                             address={restaurant.address}
                             city={restaurant.city}
-                            date={new Date(restaurant.createdAt).toLocaleDateString("es-AR")}
+                            date={new Date(restaurant.updatedAt).toLocaleDateString("es-AR")}
                             score={null}
                             tags={restaurant.tags}
                         />

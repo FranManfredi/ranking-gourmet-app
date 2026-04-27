@@ -37,6 +37,7 @@ export function LoginForm() {
       const result = await authClient.signIn.email({
         email,
         password,
+        callbackURL: "/home",
         rememberMe,
       });
 
@@ -53,7 +54,8 @@ export function LoginForm() {
       setStatus({ status: "success", message: "Inicio de sesión correcto." });
       form.reset();
       authClient.$store.notify("$sessionSignal");
-      router.push("/home");
+      router.replace("/home");
+      router.refresh();
     } catch (error) {
       console.error("Error al iniciar sesión", error);
       setStatus({

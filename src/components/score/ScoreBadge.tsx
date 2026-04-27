@@ -52,10 +52,26 @@ function getScoreStyles(score?: number | null) {
     };
 }
 
+function getLabel(score: number | null | undefined) : string {
+    if (!score || score < 1 || score > 10) {
+        return "SIN DATOS";
+    }
+    if (score <= 3) {
+        return "DECEPCIONANTE";
+    }
+    if (score <= 6) {
+        return "MEJORABLE";
+    }
+    if (score <= 8) {
+        return "RECOMENDABLE";
+    }
+    return "GOURMET";
+}
+
 export default function ScoreBadge({
                                        score,
                                        showText = true,
-                                       label = "GOURMET",
+                                       label = getLabel(score),
                                        className,
                                    }: ScoreBadgeProps) {
     const styles = getScoreStyles(score);

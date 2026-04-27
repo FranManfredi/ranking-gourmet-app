@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Tag from "@/src/components/tag/Tag";
+import { createRestaurant } from "@/src/lib/restaurants/client";
 
 interface RestaurantFormModalProps {
     open: boolean;
@@ -14,6 +15,8 @@ export default function RestaurantFormModal({
                                             }: RestaurantFormModalProps) {
     const [tags, setTags] = useState<string[]>([]);
     const [tagInput, setTagInput] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!open) return;
@@ -30,6 +33,8 @@ export default function RestaurantFormModal({
     const handleClose = () => {
         setTags([]);
         setTagInput("");
+        setError(null);
+        setIsSubmitting(false);
         onClose();
     };
 
@@ -49,7 +54,6 @@ export default function RestaurantFormModal({
     const removeTag = (tagToRemove: string) => {
         setTags((prev) => prev.filter((tag) => tag !== tagToRemove));
     };
-
     if (!open) return null;
 
     return (
@@ -67,7 +71,7 @@ export default function RestaurantFormModal({
 
                 <form
                     className="space-y-4"
-                    onSubmit={(e) => {
+                    onSubmit={async (e) => {
                         e.preventDefault();
 
                         const formData = new FormData(e.currentTarget);
@@ -79,8 +83,17 @@ export default function RestaurantFormModal({
                             tags,
                         };
 
-                        console.log(data);
-                        handleClose();
+                        try {
+                            setIsSubmitting(true);
+                            setError(null);
+                            await createRestaurant(data);
+                            handleClose();
+                        } catch (submitError) {
+                            console.error("Error creating restaurant", submitError);
+                            setError("No pudimos crear el restaurante.");
+                        } finally {
+                            setIsSubmitting(false);
+                        }
                     }}
                 >
                     <input
@@ -100,9 +113,15 @@ export default function RestaurantFormModal({
                     <input
                         name="city"
                         placeholder="Ciudad"
-                        required
+                        defaultValue="MAR DEL PLATA"
                         className="w-full rounded-2xl border border-gray-200 px-4 py-3 outline-none focus:border-[#07BAB5]"
                     />
+
+                    {error && (
+                        <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-900">
+                            {error}
+                        </p>
+                    )}
 
                     <div className="space-y-3">
                         <label className="block text-sm font-bold text-zinc-700">Tags</label>
@@ -158,9 +177,10 @@ export default function RestaurantFormModal({
 
                         <button
                             type="submit"
+                            disabled={isSubmitting}
                             className="rounded-2xl bg-[#07BAB5] px-4 py-2 font-bold text-white"
                         >
-                            Agregar
+                            {isSubmitting ? "Agregando..." : "Agregar"}
                         </button>
                     </div>
                 </form>

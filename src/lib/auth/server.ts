@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { getBackendAuthBaseUrl } from "@/src/lib/config/server";
+import { API_ROUTES } from "@/src/lib/api/routes";
 
 interface ServerSessionUser {
   id: string;
@@ -54,8 +54,18 @@ function normalizeServerSession(payload: unknown): ServerSession | null {
 
 export async function getServerSession(): Promise<ServerSession | null> {
   const requestHeaders = await headers();
+  const forwardedProto = requestHeaders.get("x-forwarded-proto");
+  const forwardedHost = requestHeaders.get("x-forwarded-host");
+  const host = forwardedHost ?? requestHeaders.get("host");
 
-  const sessionResponse = await fetch(`${getBackendAuthBaseUrl()}/get-session`, {
+  if (!host) {
+    return null;
+  }
+
+  const origin = `${forwardedProto ?? "http"}://${host}`;
+  const sessionUrl = `${origin}${API_ROUTES.auth.localBase}/get-session`;
+
+  const sessionResponse = await fetch(sessionUrl, {
     method: "GET",
     headers: {
       cookie: requestHeaders.get("cookie") ?? "",

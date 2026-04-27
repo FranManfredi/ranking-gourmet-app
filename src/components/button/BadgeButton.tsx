@@ -16,7 +16,7 @@ export default function BadgeButton({ value, icon, className }: BadgeButtonProps
         >
             {icon ? (
                 <span
-                    className="h-4 w-4 bg-current"
+                    className="block h-4 w-4 shrink-0 bg-current"
                     aria-hidden="true"
                     style={{
                         WebkitMaskImage: `url(${icon})`,
