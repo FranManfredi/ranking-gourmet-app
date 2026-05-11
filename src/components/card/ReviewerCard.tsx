@@ -205,29 +205,31 @@ export default function ReviewerCard({
                             ))}
                         </div>
 
-                        <div className="flex self-stretch flex-col items-start justify-start gap-2.5">
-                            <button
-                                type="button"
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    onEditScore?.();
-                                }}
-                                className="inline-flex w-44 items-center justify-center gap-4 overflow-hidden rounded-2xl bg-[#F4FAFB] px-5 py-4 text-[#07BAB5] outline outline-1 outline-offset-[-1px] outline-[#CFEEED]"
-                            >
-                                <span className="relative h-4 w-4 overflow-hidden" aria-hidden="true">
-                                    <svg
-                                        viewBox="0 0 16 16"
-                                        className="absolute left-0 top-0 h-4 w-4 fill-current"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path d="M11.813 1.72a1.75 1.75 0 0 1 2.474 2.474l-7.24 7.24a2 2 0 0 1-.848.5l-2.68.765a.75.75 0 0 1-.927-.927l.765-2.68a2 2 0 0 1 .5-.848l7.24-7.24Zm1.414 1.06a.25.25 0 0 0-.354 0l-1.02 1.02 1.414 1.414 1.02-1.02a.25.25 0 0 0 0-.354L13.227 2.78ZM12.207 6.273l-1.414-1.414-5.94 5.94a.5.5 0 0 0-.126.212l-.414 1.45 1.45-.414a.5.5 0 0 0 .212-.126l5.94-5.94Z" />
-                                    </svg>
-                                </span>
-                                <span className="w-24 text-center text-[10px] font-black tracking-wider">
-                                    EDITAR PUNTUACION
-                                </span>
-                            </button>
-                        </div>
+                        {onEditScore && (
+                            <div className="flex self-stretch flex-col items-start justify-start gap-2.5">
+                                <button
+                                    type="button"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        onEditScore();
+                                    }}
+                                    className="inline-flex w-44 items-center justify-center gap-4 overflow-hidden rounded-2xl bg-[#F4FAFB] px-5 py-4 text-[#07BAB5] outline outline-1 outline-offset-[-1px] outline-[#CFEEED]"
+                                >
+                                    <span className="relative h-4 w-4 overflow-hidden" aria-hidden="true">
+                                        <svg
+                                            viewBox="0 0 16 16"
+                                            className="absolute left-0 top-0 h-4 w-4 fill-current"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path d="M11.813 1.72a1.75 1.75 0 0 1 2.474 2.474l-7.24 7.24a2 2 0 0 1-.848.5l-2.68.765a.75.75 0 0 1-.927-.927l.765-2.68a2 2 0 0 1 .5-.848l7.24-7.24Zm1.414 1.06a.25.25 0 0 0-.354 0l-1.02 1.02 1.414 1.414 1.02-1.02a.25.25 0 0 0 0-.354L13.227 2.78ZM12.207 6.273l-1.414-1.414-5.94 5.94a.5.5 0 0 0-.126.212l-.414 1.45 1.45-.414a.5.5 0 0 0 .212-.126l5.94-5.94Z" />
+                                        </svg>
+                                    </span>
+                                    <span className="w-24 text-center text-[10px] font-black tracking-wider">
+                                        EDITAR PUNTUACION
+                                    </span>
+                                </button>
+                            </div>
+                        )}
                     </>
                 )}
             </div>
