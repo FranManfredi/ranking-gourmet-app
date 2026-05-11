@@ -1,11 +1,5 @@
 import { API_ROUTES } from "@/src/lib/api/routes";
 
-export interface SimpleVisitDTO {
-  id: number;
-  visitedAt: string;
-  restaurantId: number;
-}
-
 export interface SimpleRestaurantDTO {
   id: number;
   name: string;
@@ -17,11 +11,7 @@ export interface SimpleRestaurantDTO {
   score?: number | null;
 }
 
-export interface RestaurantWithVisitsDTO extends SimpleRestaurantDTO {
-  visits: SimpleVisitDTO[];
-}
-
-export type RestaurantListItemDTO = RestaurantWithVisitsDTO | SimpleRestaurantDTO;
+export type RestaurantListItemDTO = SimpleRestaurantDTO;
 
 export interface CreateRestaurantDTO {
   name: string;
@@ -130,4 +120,15 @@ export async function updateRestaurant(
   }
 
   return updatedRestaurant as SimpleRestaurantDTO;
+}
+
+export async function deleteRestaurant(id: string | number): Promise<void> {
+  const response = await fetch(API_ROUTES.restaurants.localDetail(id), {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error deleting restaurant (${response.status})`);
+  }
 }

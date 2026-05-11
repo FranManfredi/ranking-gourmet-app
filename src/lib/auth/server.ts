@@ -5,6 +5,8 @@ interface ServerSessionUser {
   id: string;
   email: string;
   name?: string;
+  role?: string;
+  isAdmin?: boolean;
 }
 
 export interface ServerSession {
@@ -13,6 +15,7 @@ export interface ServerSession {
     id: string;
     userId: string;
     expiresAt: string;
+    role?: string;
   };
 }
 
@@ -79,4 +82,18 @@ export async function getServerSession(): Promise<ServerSession | null> {
 
   const payload = (await sessionResponse.json()) as unknown;
   return normalizeServerSession(payload);
+}
+
+export function isAdminSession(session: ServerSession | null): boolean {
+  if (!session) {
+    return false;
+  }
+
+  return (
+    session.user.isAdmin === true ||
+    session.user.role === "admin" ||
+    session.user.role === "ADMIN" ||
+    session.session.role === "admin" ||
+    session.session.role === "ADMIN"
+  );
 }

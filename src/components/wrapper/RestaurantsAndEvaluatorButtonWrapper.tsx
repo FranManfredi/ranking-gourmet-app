@@ -5,8 +5,13 @@ import IconButton from "@/src/components/button/IconButton";
 import RestaurantFormModal from "@/src/components/modal/RestaurantFormModal";
 import EvaluatorFormModal from "@/src/components/modal/EvaluatorFormModal";
 
+interface RestaurantsAndEvaluatorButtonWrapperProps {
+    isAdmin: boolean;
+}
 
-export default function RestaurantsAndEvaluatorButtonWrapper() {
+export default function RestaurantsAndEvaluatorButtonWrapper({
+    isAdmin,
+}: RestaurantsAndEvaluatorButtonWrapperProps) {
     const [isEvaluatorModalOpen, setIsEvaluatorModalOpen] = useState(false);
     const [isRestaurantModalOpen, setIsRestaurantModalOpen] = useState(false);
 
@@ -20,12 +25,14 @@ export default function RestaurantsAndEvaluatorButtonWrapper() {
                     onClick={() => setIsRestaurantModalOpen(true)}
                 />
 
-                <IconButton
-                    label="EVALUADORES"
-                    icon="/octicon_person-add-16.svg"
-                    variant="default"
-                    onClick={() => setIsEvaluatorModalOpen(true)}
-                />
+                {isAdmin && (
+                    <IconButton
+                        label="EVALUADORES"
+                        icon="/octicon_person-add-16.svg"
+                        variant="default"
+                        onClick={() => setIsEvaluatorModalOpen(true)}
+                    />
+                )}
             </div>
 
             <RestaurantFormModal
@@ -33,10 +40,12 @@ export default function RestaurantsAndEvaluatorButtonWrapper() {
                 onClose={() => setIsRestaurantModalOpen(false)}
             />
 
-            <EvaluatorFormModal
-                open={isEvaluatorModalOpen}
-                onClose={() => setIsEvaluatorModalOpen(false)}
-            />
+            {isAdmin && (
+                <EvaluatorFormModal
+                    open={isEvaluatorModalOpen}
+                    onClose={() => setIsEvaluatorModalOpen(false)}
+                />
+            )}
         </>
     );
 }

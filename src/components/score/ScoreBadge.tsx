@@ -7,7 +7,7 @@ interface ScoreBadgeProps {
     className?: string;
 }
 
-function getScoreStyles(score?: number | null) {
+export function getScoreStyles(score?: number | null) {
     if (!score || score < 1 || score > 10) {
         return {
             value: "-",
@@ -52,7 +52,7 @@ function getScoreStyles(score?: number | null) {
     };
 }
 
-function getLabel(score: number | null | undefined) : string {
+export function getScoreLabel(score: number | null | undefined) : string {
     if (!score || score < 1 || score > 10) {
         return "SIN DATOS";
     }
@@ -71,7 +71,7 @@ function getLabel(score: number | null | undefined) : string {
 export default function ScoreBadge({
                                        score,
                                        showText = true,
-                                       label = getLabel(score),
+                                       label = getScoreLabel(score),
                                        className,
                                    }: ScoreBadgeProps) {
     const styles = getScoreStyles(score);

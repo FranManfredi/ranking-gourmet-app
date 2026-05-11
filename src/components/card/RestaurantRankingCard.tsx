@@ -39,7 +39,7 @@ export default function RestaurantRankingCard({
                 className
             )}
         >
-            <div className="inline-flex w-80 items-center justify-between">
+            <div className="inline-flex w-full items-center justify-between gap-3 pr-2">
                 <div className="flex w-60 items-center justify-start gap-2">
                     <div className="inline-flex w-9 flex-col items-start justify-start gap-2.5 self-stretch">
                         <BadgeButton value={position} icon={icon} className="self-stretch" />

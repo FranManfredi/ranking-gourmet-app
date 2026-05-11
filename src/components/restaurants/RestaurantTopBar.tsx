@@ -9,6 +9,7 @@ interface RestaurantTopBarProps {
   address: string;
   city: string;
   score?: number | null;
+  backHref: string;
 }
 
 export default function RestaurantTopBar({
@@ -16,6 +17,7 @@ export default function RestaurantTopBar({
                                            address,
                                            city,
                                            score,
+                                           backHref,
                                          }: RestaurantTopBarProps) {
   const router = useRouter();
 
@@ -23,7 +25,7 @@ export default function RestaurantTopBar({
       <div className="inline-flex w-full items-center justify-between overflow-hidden border-b border-[#ECFDF5] bg-white px-4 py-3">
         <div className="flex min-w-0 flex-1 items-center gap-3">
             <SmallButton
-                onClick={() => router.back()}
+                onClick={() => router.push(backHref)}
                 aria-label="Volver"
             />
           <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">

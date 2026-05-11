@@ -9,12 +9,12 @@ export async function GET(
 ) {
   try {
     const { id } = await context.params;
-    const targetUrl = `${getBackendApiBaseUrl()}${API_ROUTES.restaurants.backendDetail(id)}${request.nextUrl.search}`;
+    const targetUrl = `${getBackendApiBaseUrl()}${API_ROUTES.reviewers.backendDetail(id)}${request.nextUrl.search}`;
     return proxyToUpstream(request, targetUrl);
   } catch (error) {
-    console.error("Restaurant detail gateway error", error);
+    console.error("Reviewer detail gateway error", error);
     return Response.json(
-      { message: "Failed to load restaurant from backend gateway" },
+      { message: "Failed to load reviewer from backend gateway" },
       { status: 500 }
     );
   }
@@ -26,12 +26,12 @@ export async function PATCH(
 ) {
   try {
     const { id } = await context.params;
-    const targetUrl = `${getBackendApiBaseUrl()}${API_ROUTES.restaurants.backendDetail(id)}`;
+    const targetUrl = `${getBackendApiBaseUrl()}${API_ROUTES.reviewers.backendDetail(id)}`;
     return proxyToUpstream(request, targetUrl);
   } catch (error) {
-    console.error("Restaurant update gateway error", error);
+    console.error("Reviewer update gateway error", error);
     return Response.json(
-      { message: "Failed to update restaurant through backend gateway" },
+      { message: "Failed to update reviewer through backend gateway" },
       { status: 500 }
     );
   }
@@ -43,12 +43,12 @@ export async function DELETE(
 ) {
   try {
     const { id } = await context.params;
-    const targetUrl = `${getBackendApiBaseUrl()}${API_ROUTES.restaurants.backendDetail(id)}`;
+    const targetUrl = `${getBackendApiBaseUrl()}${API_ROUTES.reviewers.backendDetail(id)}`;
     return proxyToUpstream(request, targetUrl);
   } catch (error) {
-    console.error("Restaurant delete gateway error", error);
+    console.error("Reviewer delete gateway error", error);
     return Response.json(
-      { message: "Failed to delete restaurant through backend gateway" },
+      { message: "Failed to delete reviewer through backend gateway" },
       { status: 500 }
     );
   }
