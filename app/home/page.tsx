@@ -1,5 +1,5 @@
 import Logo from "@/src/components/logo/logo";
-import LogoutButton from "@/src/components/auth/logout-button";
+import AccountActionsButton from "@/src/components/auth/account-actions-button";
 import SearchSortBarWrapper from "@/src/components/wrapper/SearchSortBarWrapper";
 import RestaurantsAndEvaluatorButtonWrapper from "@/src/components/wrapper/RestaurantsAndEvaluatorButtonWrapper";
 import { redirect } from "next/navigation";
@@ -17,10 +17,10 @@ export default async function HomePage() {
   return (
       <main className="flex min-h-screen flex-col items-center gap-2 bg-[#FFFFFF] pt-[10px]">
           <div className="flex w-full justify-end px-4 pt-2">
-              <LogoutButton />
+              <AccountActionsButton />
           </div>
           <Logo/>
-          <div className="text-center justify-start text-black text-3xl font-black font-['Inter'] leading-8">
+          <div className="text-center justify-start text-black text-3xl font-black leading-8">
               RANKING GOURMET
               <br/>
           </div>
