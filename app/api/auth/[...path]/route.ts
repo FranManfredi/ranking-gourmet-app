@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
-
-const DEFAULT_BACKEND_AUTH_URL = "http://localhost:3000/api/auth";
+import { getBackendAuthBaseUrl } from "@/src/lib/config/server";
 
 const HOP_BY_HOP_HEADERS = new Set([
   "connection",
@@ -14,13 +13,6 @@ const HOP_BY_HOP_HEADERS = new Set([
   "transfer-encoding",
   "upgrade",
 ]);
-
-function getBackendAuthBaseUrl() {
-  return (
-    process.env.BETTER_AUTH_BACKEND_URL?.replace(/\/$/, "") ??
-    DEFAULT_BACKEND_AUTH_URL
-  );
-}
 
 function buildTargetUrl(request: NextRequest, path: string[]) {
   const upstreamBase = getBackendAuthBaseUrl();

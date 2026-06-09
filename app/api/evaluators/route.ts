@@ -1,11 +1,8 @@
 import { NextRequest } from "next/server";
-import { getBackendApiBaseUrl } from "@/src/lib/config/server";
-
-const DEFAULT_BACKEND_AUTH_URL = "http://localhost:3000/api/auth";
-
-function getBackendAuthBaseUrl() {
-  return process.env.BETTER_AUTH_BACKEND_URL?.replace(/\/$/, "") ?? DEFAULT_BACKEND_AUTH_URL;
-}
+import {
+  getBackendApiBaseUrl,
+  getBackendAuthBaseUrl,
+} from "@/src/lib/config/server";
 
 function getRequestOrigin(request: NextRequest) {
   const forwardedProto = request.headers.get("x-forwarded-proto");
