@@ -25,7 +25,10 @@ export async function POST(request: NextRequest) {
       return Response.json({ message: "Invalid review payload" }, { status: 400 });
     }
 
-    const authorization = await authorizeReviewCreation(payload.reviewerId);
+    const authorization = await authorizeReviewCreation(
+      payload.reviewerId,
+      request.headers.get("cookie") ?? ""
+    );
 
     if (!authorization.ok) {
       return Response.json(

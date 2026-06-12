@@ -27,7 +27,10 @@ export async function PATCH(
 ) {
   try {
     const { id } = await context.params;
-    const authorization = await authorizeReviewMutation(id);
+    const authorization = await authorizeReviewMutation(
+      id,
+      request.headers.get("cookie") ?? ""
+    );
 
     if (!authorization.ok) {
       return Response.json(
@@ -53,7 +56,10 @@ export async function DELETE(
 ) {
   try {
     const { id } = await context.params;
-    const authorization = await authorizeReviewMutation(id);
+    const authorization = await authorizeReviewMutation(
+      id,
+      request.headers.get("cookie") ?? ""
+    );
 
     if (!authorization.ok) {
       return Response.json(

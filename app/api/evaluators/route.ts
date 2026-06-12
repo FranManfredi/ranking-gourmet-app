@@ -1,8 +1,6 @@
 import { NextRequest } from "next/server";
-import {
-  getBackendApiBaseUrl,
-  getBackendAuthBaseUrl,
-} from "@/src/lib/config/server";
+import { getServerSession, isAdminSession } from "@/src/lib/auth/server";
+import { getBackendAuthBaseUrl } from "@/src/lib/config/server";
 
 function getRequestOrigin(request: NextRequest) {
   const forwardedProto = request.headers.get("x-forwarded-proto");
@@ -18,6 +16,19 @@ function getRequestOrigin(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession();
+
+    if (!session?.user) {
+      return Response.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!isAdminSession(session)) {
+      return Response.json(
+        { message: "Solo un administrador puede crear evaluadores." },
+        { status: 403 }
+      );
+    }
+
     const payload = (await request.json()) as {
       name?: string;
       surname?: string;
@@ -40,7 +51,7 @@ export async function POST(request: NextRequest) {
     const cookieHeader = request.headers.get("cookie") ?? "";
     const origin = getRequestOrigin(request);
 
-    const signUpResponse = await fetch(`${getBackendAuthBaseUrl()}/sign-up/email`, {
+    const createUserResponse = await fetch(`${getBackendAuthBaseUrl()}/admin/create-user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,11 +63,15 @@ export async function POST(request: NextRequest) {
         name: `${name} ${surname}`.trim(),
         email,
         password,
+        role: "user",
+        data: {
+          surname,
+        },
       }),
       cache: "no-store",
     });
 
-    const signUpPayload = (await signUpResponse.json().catch(() => null)) as
+    const createUserPayload = (await createUserResponse.json().catch(() => null)) as
       | {
           user?: {
             id?: string;
@@ -66,47 +81,19 @@ export async function POST(request: NextRequest) {
         }
       | null;
 
-    if (!signUpResponse.ok || !signUpPayload?.user?.id) {
+    if (!createUserResponse.ok || !createUserPayload?.user?.id) {
       return Response.json(
         {
           message:
-            signUpPayload?.message ??
-            signUpPayload?.error ??
+            createUserPayload?.message ??
+            createUserPayload?.error ??
             "No pudimos crear el usuario del evaluador.",
         },
-        { status: signUpResponse.status || 500 }
+        { status: createUserResponse.status || 500 }
       );
     }
 
-    const reviewerResponse = await fetch(`${getBackendApiBaseUrl()}/api/reviewers`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        cookie: cookieHeader,
-      },
-      body: JSON.stringify({
-        name,
-        surname,
-        userId: signUpPayload.user.id,
-      }),
-      cache: "no-store",
-    });
-
-    const reviewerPayload = await reviewerResponse.json().catch(() => null);
-
-    if (!reviewerResponse.ok) {
-      return Response.json(
-        {
-          message:
-            (reviewerPayload as { message?: string; error?: string } | null)?.message ??
-            (reviewerPayload as { message?: string; error?: string } | null)?.error ??
-            "No pudimos crear el evaluador.",
-        },
-        { status: reviewerResponse.status || 500 }
-      );
-    }
-
-    return Response.json(reviewerPayload, { status: 201 });
+    return Response.json(createUserPayload, { status: 201 });
   } catch (error) {
     console.error("Evaluator create gateway error", error);
     return Response.json(

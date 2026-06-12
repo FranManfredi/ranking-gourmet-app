@@ -26,9 +26,15 @@ type AuthorizationResult =
   | { ok: true; value: AuthorizationSuccess }
   | { ok: false; error: AuthorizationError };
 
-async function fetchBackendJson<T>(path: string): Promise<T | null> {
+async function fetchBackendJson<T>(
+  path: string,
+  cookieHeader: string
+): Promise<T | null> {
   const response = await fetch(`${getBackendApiBaseUrl()}${path}`, {
     method: "GET",
+    headers: {
+      cookie: cookieHeader,
+    },
     cache: "no-store",
   });
 
@@ -39,7 +45,10 @@ async function fetchBackendJson<T>(path: string): Promise<T | null> {
   return (await response.json()) as T;
 }
 
-export async function authorizeReviewMutation(reviewId: string): Promise<AuthorizationResult> {
+export async function authorizeReviewMutation(
+  reviewId: string,
+  cookieHeader: string
+): Promise<AuthorizationResult> {
   const session = await getServerSession();
 
   if (!session?.user) {
@@ -57,8 +66,14 @@ export async function authorizeReviewMutation(reviewId: string): Promise<Authori
   }
 
   const [review, reviewers] = await Promise.all([
-    fetchBackendJson<ReviewRecord>(API_ROUTES.reviews.backendDetail(reviewId)),
-    fetchBackendJson<ReviewerRecord[]>(API_ROUTES.reviewers.backendBase),
+    fetchBackendJson<ReviewRecord>(
+      API_ROUTES.reviews.backendDetail(reviewId),
+      cookieHeader
+    ),
+    fetchBackendJson<ReviewerRecord[]>(
+      API_ROUTES.reviewers.backendBase,
+      cookieHeader
+    ),
   ]);
 
   if (!review) {
@@ -91,7 +106,8 @@ export async function authorizeReviewMutation(reviewId: string): Promise<Authori
 }
 
 export async function authorizeReviewCreation(
-  reviewerId: number
+  reviewerId: number,
+  cookieHeader: string
 ): Promise<AuthorizationResult> {
   const session = await getServerSession();
 
@@ -109,7 +125,10 @@ export async function authorizeReviewCreation(
     };
   }
 
-  const reviewers = await fetchBackendJson<ReviewerRecord[]>(API_ROUTES.reviewers.backendBase);
+  const reviewers = await fetchBackendJson<ReviewerRecord[]>(
+    API_ROUTES.reviewers.backendBase,
+    cookieHeader
+  );
   const currentReviewer = reviewers?.find((reviewer) => reviewer.userId === session.user.id);
 
   if (!currentReviewer) {

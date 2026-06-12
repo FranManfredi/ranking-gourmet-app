@@ -41,9 +41,10 @@ export default function VisitRankingCard({
                         height={16}
                         className="h-4 w-4"
                     />
-                    <span className="w-20 text-center text-xs font-black text-[#07BAB5]">
-                        {date}
-                    </span>
+                    <div className="flex w-20 flex-col items-center text-center font-black text-[#07BAB5]">
+                        <span className="text-[10px] tracking-wider">VISITA</span>
+                        <span className="text-xs">{date}</span>
+                    </div>
                 </div>
             </div>
 
