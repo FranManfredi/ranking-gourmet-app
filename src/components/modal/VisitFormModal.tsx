@@ -12,6 +12,14 @@ interface VisitFormModalProps {
   onSaved?: (visit: SimpleVisitDTO) => void;
 }
 
+function getDateInputValue(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 export default function VisitFormModal({
   open,
   restaurantId,
@@ -24,6 +32,9 @@ export default function VisitFormModal({
   const [error, setError] = useState<string | null>(null);
   const [, startTransition] = useTransition();
   const isEditing = Boolean(visit);
+  const defaultVisitedAt = visit?.visitedAt
+    ? visit.visitedAt.slice(0, 10)
+    : getDateInputValue(new Date());
 
   useEffect(() => {
     if (!open) return;
@@ -47,11 +58,11 @@ export default function VisitFormModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4 py-6"
       onTouchMove={(e) => e.preventDefault()}
     >
       <div
-        className="w-full max-w-md rounded-3xl bg-white p-6 shadow-xl"
+        className="max-h-full w-full max-w-md overflow-y-auto rounded-3xl bg-white p-5 shadow-xl sm:p-6"
         onTouchMove={(e) => e.stopPropagation()}
       >
         <h2 className="mb-2 text-xl font-bold text-black">
@@ -60,7 +71,7 @@ export default function VisitFormModal({
         <p className="mb-4 text-sm text-zinc-700">
           {isEditing
             ? "Podés cambiar el día de la visita."
-            : "La fecha es opcional. Si la dejás vacía, se usa la fecha actual."}
+            : "La fecha predeterminada es la de hoy."}
         </p>
 
         <form
@@ -110,11 +121,10 @@ export default function VisitFormModal({
           <input
             name="visitedAt"
             type="date"
-            inputMode="none"
-            defaultValue={visit?.visitedAt ? visit.visitedAt.slice(0, 10) : ""}
+            defaultValue={defaultVisitedAt}
             onKeyDown={(e) => e.preventDefault()}
             onPaste={(e) => e.preventDefault()}
-            className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-zinc-900 outline-none focus:border-[#07BAB5]"
+            className="block w-full min-w-0 max-w-full appearance-none rounded-2xl border border-gray-200 bg-white px-4 py-3 text-base text-zinc-900 outline-none focus:border-[#07BAB5]"
           />
 
           {error && (

@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { Check, Pencil, Plus, Trash2, UserPlus } from "lucide-react";
 
 type ButtonVariant = "default" | "delete" | "confirm";
 
@@ -32,14 +33,34 @@ const variantStyles: Record<
     },
 };
 
+function renderIcon(icon: string, variant: ButtonVariant) {
+    if (variant === "delete" || icon.includes("trash")) {
+        return <Trash2 className="h-4 w-4 shrink-0" aria-hidden="true" />;
+    }
+
+    if (variant === "confirm" || icon.includes("check")) {
+        return <Check className="h-4 w-4 shrink-0" aria-hidden="true" />;
+    }
+
+    if (icon.includes("person-add")) {
+        return <UserPlus className="h-4 w-4 shrink-0" aria-hidden="true" />;
+    }
+
+    if (icon.includes("edit") || icon.includes("pencil")) {
+        return <Pencil className="h-4 w-4 shrink-0" aria-hidden="true" />;
+    }
+
+    return <Plus className="h-4 w-4 shrink-0" aria-hidden="true" />;
+}
+
 export default function IconButton({
-                                           label,
-                                           icon,
-                                           variant = "default",
-                                           onClick,
-                                           className,
-                                           type = "button",
-                                       }: CategoryButtonProps) {
+    label,
+    icon,
+    variant = "default",
+    onClick,
+    className,
+    type = "button",
+}: CategoryButtonProps) {
     const styles = variantStyles[variant];
 
     return (
@@ -53,24 +74,11 @@ export default function IconButton({
                 className
             )}
         >
-      <span
-          className="h-4 w-4 shrink-0 bg-current"
-          aria-hidden="true"
-          style={{
-              WebkitMaskImage: `url(${icon})`,
-              maskImage: `url(${icon})`,
-              WebkitMaskRepeat: "no-repeat",
-              maskRepeat: "no-repeat",
-              WebkitMaskPosition: "center",
-              maskPosition: "center",
-              WebkitMaskSize: "contain",
-              maskSize: "contain",
-          }}
-      />
+            {renderIcon(icon, variant)}
 
             <span className="text-center text-[10px] font-black tracking-wider">
-        {label}
-      </span>
+                {label}
+            </span>
         </button>
     );
 }

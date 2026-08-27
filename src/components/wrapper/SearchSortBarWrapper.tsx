@@ -7,40 +7,16 @@ import { getAllRestaurants, RestaurantListItemDTO } from "@/src/lib/restaurants/
 import { getRestaurantAverageScore } from "@/src/lib/ratings";
 import { getAllVisits, VisitWithDetailsDTO } from "@/src/lib/visits/client";
 import { useRouter } from "next/navigation";
-
-type SortMode =
-    | "name-asc"
-    | "name-desc"
-    | "visit-recent"
-    | "visit-oldest"
-    | "score-asc"
-    | "score-desc";
-
-const SORT_MODE_SEQUENCE: SortMode[] = [
-    "name-asc",
-    "name-desc",
-    "visit-recent",
-    "visit-oldest",
-    "score-desc",
-    "score-asc",
-];
-
-function getSortLabel(sortMode: SortMode) {
-    switch (sortMode) {
-        case "name-asc":
-            return "A-Z";
-        case "name-desc":
-            return "Z-A";
-        case "visit-recent":
-            return "REC.";
-        case "visit-oldest":
-            return "ANT.";
-        case "score-desc":
-            return "SCORE+";
-        case "score-asc":
-            return "SCORE-";
-    }
-}
+import {
+    DEFAULT_SORT_MODE,
+    getSortOption,
+    getStoredDefaultSortMode,
+    isSortMode,
+    SORT_OPTIONS,
+    SORT_PREFERENCE_CHANGED_EVENT,
+    SORT_PREFERENCE_STORAGE_KEY,
+    SortMode,
+} from "@/src/lib/sort-preferences";
 
 export default function SearchSortBarWrapper() {
     const [restaurants, setRestaurants] = useState<RestaurantListItemDTO[]>([]);
@@ -48,8 +24,33 @@ export default function SearchSortBarWrapper() {
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [sortMode, setSortMode] = useState<SortMode>("name-asc");
+    const [sortMode, setSortMode] = useState<SortMode>(DEFAULT_SORT_MODE);
     const router = useRouter();
+
+    useEffect(() => {
+        setSortMode(getStoredDefaultSortMode());
+
+        const handlePreferenceChange = (event: Event) => {
+            const sortPreference = (event as CustomEvent<string>).detail;
+            if (isSortMode(sortPreference)) {
+                setSortMode(sortPreference);
+            }
+        };
+
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.key === SORT_PREFERENCE_STORAGE_KEY && event.newValue && isSortMode(event.newValue)) {
+                setSortMode(event.newValue);
+            }
+        };
+
+        window.addEventListener(SORT_PREFERENCE_CHANGED_EVENT, handlePreferenceChange);
+        window.addEventListener("storage", handleStorageChange);
+
+        return () => {
+            window.removeEventListener(SORT_PREFERENCE_CHANGED_EVENT, handlePreferenceChange);
+            window.removeEventListener("storage", handleStorageChange);
+        };
+    }, []);
 
     useEffect(() => {
         const loadRestaurants = async () => {
@@ -170,15 +171,11 @@ export default function SearchSortBarWrapper() {
                     placeholder="Buscar restaurante"
                     searchIcon="/search.svg"
                     sortIcon="/sort.svg"
-                    sortLabel={getSortLabel(sortMode)}
-                    onChange={setSearchTerm}
-                    onSortClick={() =>
-                        setSortMode((current) => {
-                            const currentIndex = SORT_MODE_SEQUENCE.indexOf(current);
-                            const nextIndex = (currentIndex + 1) % SORT_MODE_SEQUENCE.length;
-                            return SORT_MODE_SEQUENCE[nextIndex];
-                        })
-                    }
+                    sortLabel={getSortOption(sortMode).shortLabel}
+                    sortValue={sortMode}
+                    sortOptions={SORT_OPTIONS}
+                    onSearchChange={setSearchTerm}
+                    onSortChange={setSortMode}
                 />
             </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import clsx from "clsx";
+import { ArrowUpDown, CalendarDays, Plus, UserPlus } from "lucide-react";
 
 interface IconTextButtonProps {
     label: string;
@@ -11,14 +12,34 @@ interface IconTextButtonProps {
     ariaLabel?: string;
 }
 
+function renderIcon(icon?: string) {
+    if (!icon) {
+        return null;
+    }
+
+    if (icon.includes("calendar")) {
+        return <CalendarDays className="h-4 w-4 shrink-0" aria-hidden="true" />;
+    }
+
+    if (icon.includes("sort")) {
+        return <ArrowUpDown className="h-4 w-4 shrink-0" aria-hidden="true" />;
+    }
+
+    if (icon.includes("person-add")) {
+        return <UserPlus className="h-4 w-4 shrink-0" aria-hidden="true" />;
+    }
+
+    return <Plus className="h-4 w-4 shrink-0" aria-hidden="true" />;
+}
+
 export default function SmallIconTextButton({
                                            label,
                                            icon,
                                            onClick,
                                            className,
-                                           type = "button",
-                                           ariaLabel,
-                                       }: IconTextButtonProps) {
+                                       type = "button",
+                                       ariaLabel,
+                                   }: IconTextButtonProps) {
     return (
         <button
             type={type}
@@ -29,22 +50,7 @@ export default function SmallIconTextButton({
         className
 )}
 >
-    {icon && (
-        <span
-            className="block h-4 w-3.5 shrink-0 bg-current"
-        aria-hidden="true"
-        style={{
-        WebkitMaskImage: `url(${icon})`,
-            maskImage: `url(${icon})`,
-            WebkitMaskRepeat: "no-repeat",
-            maskRepeat: "no-repeat",
-            WebkitMaskPosition: "center",
-            maskPosition: "center",
-            WebkitMaskSize: "contain",
-            maskSize: "contain",
-    }}
-        />
-    )}
+    {renderIcon(icon)}
 
     <span className="text-center text-[10px] font-black tracking-wider">
         {label}

@@ -14,6 +14,7 @@ import SmallIconTextButton from "@/src/components/button/SmallIconTextButton";
 import VisitFormModal from "@/src/components/modal/VisitFormModal";
 import RestaurantFormModal from "@/src/components/modal/RestaurantFormModal";
 import VisitRankingCard from "@/src/components/card/VisitRankingCard";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface RestaurantPageClientProps {
   id: string;
@@ -196,18 +197,7 @@ export default function RestaurantPageClient({ id }: RestaurantPageClientProps) 
               onClick={() => setIsRestaurantModalOpen(true)}
               className="inline-flex w-44 items-center justify-center gap-4 overflow-hidden rounded-2xl bg-[#F4FAFB] px-5 py-4 text-[#07BAB5] outline outline-1 outline-offset-[-1px] outline-[#CFEEED]"
             >
-              <span className="relative h-4 w-4 overflow-hidden" aria-hidden="true">
-                <svg
-                  viewBox="0 0 16 16"
-                  className="absolute left-0 top-0 h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M11.813 1.72a1.75 1.75 0 0 1 2.474 2.474l-7.24 7.24a2 2 0 0 1-.848.5l-2.68.765a.75.75 0 0 1-.927-.927l.765-2.68a2 2 0 0 1 .5-.848l7.24-7.24Zm1.414 1.06a.25.25 0 0 0-.354 0l-1.02 1.02 1.414 1.414 1.02-1.02a.25.25 0 0 0 0-.354L13.227 2.78ZM12.207 6.273l-1.414-1.414-5.94 5.94a.5.5 0 0 0-.126.212l-.414 1.45 1.45-.414a.5.5 0 0 0 .212-.126l5.94-5.94Z"
-                  />
-                </svg>
-              </span>
+              <Pencil className="h-4 w-4 shrink-0" aria-hidden="true" />
               <span className="w-24 text-center text-[10px] font-black tracking-wider">
                 EDITAR RESTAURANTE
               </span>
@@ -219,18 +209,7 @@ export default function RestaurantPageClient({ id }: RestaurantPageClientProps) 
               disabled={isDeleting}
               className="inline-flex w-44 items-center justify-center gap-4 overflow-hidden rounded-2xl bg-[#FFDFDF] px-5 py-4 text-[#FF0000] outline outline-1 outline-offset-[-1px] outline-[#FF7171] disabled:opacity-60"
             >
-              <span className="relative h-4 w-4 overflow-hidden" aria-hidden="true">
-                <svg
-                  viewBox="0 0 16 16"
-                  className="absolute left-0 top-0 h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M5.5 2.5A1.5 1.5 0 0 1 7 1h2a1.5 1.5 0 0 1 1.5 1.5V3H13a.75.75 0 0 1 0 1.5h-.563l-.61 8.138A2 2 0 0 1 9.833 14.5H6.167a2 2 0 0 1-1.994-1.862L3.563 4.5H3A.75.75 0 0 1 3 3h2.5v-.5ZM9 2.5h-2V3h2v-.5ZM5.677 12.526a.5.5 0 0 0 .49.474h3.666a.5.5 0 0 0 .49-.474L10.93 4.5H5.07l.607 8.026ZM6.75 6.25A.75.75 0 0 1 7.5 7v3a.75.75 0 0 1-1.5 0V7a.75.75 0 0 1 .75-.75Zm2.5 0A.75.75 0 0 1 10 7v3a.75.75 0 0 1-1.5 0V7a.75.75 0 0 1 .75-.75Z"
-                  />
-                </svg>
-              </span>
+              <Trash2 className="h-4 w-4 shrink-0" aria-hidden="true" />
               <span className="w-24 text-center text-[10px] font-black tracking-wider">
                 {isDeleting ? "ELIMINANDO..." : "ELIMINAR RESTAURANTE"}
               </span>

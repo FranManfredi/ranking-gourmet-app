@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { Trophy } from "lucide-react";
 
 interface BadgeButtonProps {
     value?: string | number;
@@ -15,20 +16,7 @@ export default function BadgeButton({ value, icon, className }: BadgeButtonProps
             )}
         >
             {icon ? (
-                <span
-                    className="block h-4 w-4 shrink-0 bg-current"
-                    aria-hidden="true"
-                    style={{
-                        WebkitMaskImage: `url(${icon})`,
-                        maskImage: `url(${icon})`,
-                        WebkitMaskRepeat: "no-repeat",
-                        maskRepeat: "no-repeat",
-                        WebkitMaskPosition: "center",
-                        maskPosition: "center",
-                        WebkitMaskSize: "contain",
-                        maskSize: "contain",
-                    }}
-                />
+                <Trophy className="h-4 w-4 shrink-0" aria-hidden="true" />
             ) : (
                 <span className="flex h-full w-full items-center justify-center text-center text-base font-black leading-none">
           {value}

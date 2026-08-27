@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import BadgeButton from "@/src/components/button/BadgeButton";
 import ScoreBadge from "@/src/components/score/ScoreBadge";
-import Image from "next/image";
+import { CalendarDays } from "lucide-react";
 
 interface VisitRankingCardProps {
     position?: number | string;
@@ -34,13 +34,7 @@ export default function VisitRankingCard({
             <div className="flex w-60 items-center justify-start gap-2">
                 <BadgeButton value={badgeValue} className="self-stretch" />
                 <div className="flex self-stretch items-center justify-start gap-2.5 pl-4 pr-2">
-                    <Image
-                        src="/calendar.svg"
-                        alt="Calendario"
-                        width={16}
-                        height={16}
-                        className="h-4 w-4"
-                    />
+                    <CalendarDays className="h-4 w-4 shrink-0 text-[#07BAB5]" aria-hidden="true" />
                     <div className="flex w-20 flex-col items-center text-center font-black text-[#07BAB5]">
                         <span className="text-[10px] tracking-wider">VISITA</span>
                         <span className="text-xs">{date}</span>
