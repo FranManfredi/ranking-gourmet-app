@@ -7,3 +7,4 @@ Dockerfile
 README.md
 coverage
 .DS_Store
+.idea
